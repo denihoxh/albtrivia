@@ -1,9 +1,10 @@
 import { connectDB } from '@/lib/db/mongodb';
 import Agent from '@/lib/models/Agent';
 
-export default async function ClaimPage({ params }: { params: { token: string } }) {
+export default async function ClaimPage({ params }: { params: Promise<{ token: string }> }) {
   await connectDB();
-  const agent = await Agent.findOne({ claimToken: params.token });
+  const { token } = await params;
+  const agent = await Agent.findOne({ claimToken: token });
 
   if (!agent) return (
     <div style={{ maxWidth: 500, margin: '80px auto', textAlign: 'center', padding: '0 20px' }}>
